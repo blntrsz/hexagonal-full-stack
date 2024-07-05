@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/vite-react/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@backend/*": ["../backend/src/*"],
+      "@frontend/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
