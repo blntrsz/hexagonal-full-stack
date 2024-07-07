@@ -1,10 +1,10 @@
-import { useTaskQuery } from '@frontend/api/task/get-task-by-id.loader'
+import { RemoveTask } from '@frontend/features/remove-task'
+import { TaskTable } from '@frontend/features/task-table'
 
 export function TaskPage() {
-  const taskQuery = useTaskQuery()
-
-  return <>
-    <div>{taskQuery.data.data.attributes.description}</div>
-  </>
+  return <div className='flex flex-col gap-8'>
+    <TaskTable />
+    <RemoveTask />
+  </div>
 }
 

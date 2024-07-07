@@ -4,5 +4,6 @@ export const Routes = {
 } as const
 
 export enum SearchParams {
-  FILTER = 'filter'
+  FILTER = 'filter',
+  IS_CREATING = 'is-creating'
 }

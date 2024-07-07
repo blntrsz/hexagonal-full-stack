@@ -9,8 +9,13 @@ async function getTaskById(id: number) {
       id: id.toString(),
     }
   })
+  const jsonResponse = await response.json()
 
-  return response.json()
+  if (!response.ok || ('message' in jsonResponse)) {
+    throw response
+  }
+
+  return jsonResponse
 }
 
 const getTaskByIdQuery = (id: number) => ({
@@ -31,6 +36,7 @@ export function useTaskQuery() {
 
   return useQuery({
     ...getTaskByIdQuery(id),
+    staleTime: Infinity,
     initialData,
   })
 }

@@ -12,11 +12,18 @@ async function listTasks(userId?: number) {
       userId: userId?.toString(),
     }
   })
+  const jsonResponse = await response.json()
 
-  return response.json()
+  if (!response.ok || ('message' in jsonResponse)) {
+    throw response
+  }
+
+  return jsonResponse
 }
 
-const listTasksQuery = (userId?: number) => ({
+export type ListTasksResponse = Awaited<ReturnType<typeof listTasks>>
+
+export const listTasksQuery = (userId?: number) => ({
   queryKey: taskKeys.list(userId!),
   queryFn: () => listTasks(userId),
 })
@@ -34,6 +41,7 @@ export function useTasksQuery() {
 
   return useQuery({
     ...listTasksQuery(userId),
+    staleTime: Infinity,
     initialData,
   })
 }

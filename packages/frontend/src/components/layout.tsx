@@ -9,8 +9,10 @@ export function Layout() {
     <main className={container + " flex-1"}>
       <Outlet />
     </main>
-    <footer className={container}>
+    <footer className={container + " flex gap-8"}>
       <Link to="/users">Manage Users</Link>
+      <div>-</div>
+      <Link to="/audit">Audit Log</Link>
     </footer>
   </div>
 }

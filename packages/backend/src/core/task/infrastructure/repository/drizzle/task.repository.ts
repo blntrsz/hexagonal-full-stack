@@ -3,6 +3,7 @@ import { taskTable } from "./task.sql";
 import { TaskRepository } from "@backend/core/task/domain/repository/task.repository";
 import { Task, TaskSchema } from "@backend/core/task/domain/task";
 import { eq, isNull } from "drizzle-orm";
+import { RecordNotFoundError } from "@backend/core/error/recordnotfound.error";
 
 export class DrizzleTaskRepository implements TaskRepository {
   async list(filter: {
@@ -34,7 +35,17 @@ export class DrizzleTaskRepository implements TaskRepository {
       eq(taskTable.id, task.id)
     ).execute()
 
+    if (!result) {
+      throw RecordNotFoundError.byCriteria("Task", "id", task.id)
+    }
+
     return new Task(result)
+  }
+
+  async remove(task: Pick<TaskSchema, "id">, trx = database): Promise<void> {
+    await trx.delete(taskTable).where(
+      eq(taskTable.id, task.id)
+    )
   }
 }
 

@@ -1,13 +1,12 @@
 import { DrizzleTaskRepository } from "@backend/core/task/infrastructure/repository/drizzle/task.repository";
 import { createFactory } from 'hono/factory'
-import { GetTaskById } from "../use-cases/get-task-by-id";
+import { RemoveTask } from "@backend/core/task/use-cases/remove-task";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { taskDTO } from "./task.dto";
 import { ConsoleLogger } from "@backend/core/logger/infrastructure/console-logger";
 import { toHttpError } from "@backend/core/error/to-http.error";
 
-export const getTaskByIdHandlers = createFactory().createHandlers(
+export const removeTaskHandlers = createFactory().createHandlers(
   zValidator(
     'param',
     z.object({
@@ -17,13 +16,16 @@ export const getTaskByIdHandlers = createFactory().createHandlers(
   async (c) => {
     const param = c.req.valid('param')
     try {
-      const createTaskUseCase = new GetTaskById(
+      const createTaskUseCase = new RemoveTask(
         new ConsoleLogger(),
         new DrizzleTaskRepository()
       )
-      const task = await createTaskUseCase.onRequest(param)
 
-      return c.json(taskDTO(task))
+      await createTaskUseCase.onRequest(param)
+
+      return c.json({
+        message: 'success'
+      })
     } catch (e) {
       const httpError = toHttpError(e)
 
@@ -32,3 +34,4 @@ export const getTaskByIdHandlers = createFactory().createHandlers(
       }, httpError.status)
     }
   })
+

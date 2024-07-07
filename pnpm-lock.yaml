@@ -114,6 +114,9 @@ importers:
       aws-cdk-lib:
         specifier: 2.147.0
         version: 2.147.0(constructs@10.3.0)
+      better-sqlite3:
+        specifier: ^11.1.2
+        version: 11.1.2
       cdk-spa-deploy:
         specifier: 2.0.0-alpha.1
         version: 2.0.0-alpha.1(aws-cdk-lib@2.147.0(constructs@10.3.0))(constructs@10.3.0)

@@ -6,7 +6,7 @@ export function ListTasks() {
 
   return <ul className="">{
     tasksQuery.data.data.map(task => (
-      <li key={task.id}>
+      <li className={task.isCreating ? 'text-green-600' : ''} key={task.id}>
         <Link to={`/${task.id}`}>{task.attributes.description}</Link>
       </li>
     ))

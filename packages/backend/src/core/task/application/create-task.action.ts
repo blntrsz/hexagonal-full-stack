@@ -4,6 +4,8 @@ import { DrizzleTaskRepository } from "@backend/core/task/infrastructure/reposit
 import { createFactory } from 'hono/factory'
 import { zValidator } from '@hono/zod-validator'
 import { taskDTO } from "./task.dto";
+import { ConsoleLogger } from "@backend/core/logger/infrastructure/console-logger";
+import { toHttpError } from "@backend/core/error/to-http.error";
 
 export const createTaskHandlers = createFactory().createHandlers(
   zValidator(
@@ -17,15 +19,18 @@ export const createTaskHandlers = createFactory().createHandlers(
     try {
       const body = c.req.valid('json')
       const createTaskUseCase = new CreateTask(
-        new DrizzleTaskRepository()
+        new ConsoleLogger(),
+        new DrizzleTaskRepository(),
       )
       const task = await createTaskUseCase.onRequest(body)
 
       return c.json(taskDTO(task))
     } catch (e) {
-      throw c.json({
-        message: 'Internal Server Error'
-      }, 500)
+      const httpError = toHttpError(e)
+
+      return c.json({
+        message: httpError.message
+      }, httpError.status)
     }
   })
 
